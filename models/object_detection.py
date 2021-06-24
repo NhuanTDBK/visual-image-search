@@ -12,7 +12,7 @@ def extract_patches(detector: tf.keras.models.Model,
                     max_boxes: int = 10):
     shape = tf.shape(img)
     im_height, im_width = shape[0].numpy(), shape[1].numpy()
-    result = detector(tf.image.convert_image_dtype(img, img.dtype)[tf.newaxis, ...])
+    result = detector(img[tf.newaxis, ...])
 
     result = {key: value.numpy() for key, value in result.items()}
 
