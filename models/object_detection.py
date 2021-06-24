@@ -12,13 +12,13 @@ def extract_patches(detector: tf.keras.models.Model,
                     max_boxes: int = 10):
     shape = tf.shape(img)
     im_height, im_width = shape[0].numpy(), shape[1].numpy()
-    result = detector(tf.image.convert_image_dtype(img, tf.float32)[tf.newaxis, ...])
+    result = detector(tf.image.convert_image_dtype(img, img.dtype)[tf.newaxis, ...])
 
     result = {key: value.numpy() for key, value in result.items()}
 
-    boxes = result["detection_boxes"]
-    entities = result["detection_class_entities"]
-    scores = result["detection_scores"]
+    boxes = result["detection_boxes"][0]
+    # entities = result["detection_class_entities"]
+    scores = result["detection_scores"][0]
 
     examples = []
 
@@ -26,13 +26,13 @@ def extract_patches(detector: tf.keras.models.Model,
         if scores[i] >= min_score:
             example = {}
             ymin, xmin, ymax, xmax = tuple(boxes[i])
-            class_name = entities[i].decode("ascii")
+            # class_name = entities[i].decode("ascii")
 
             xmin, xmax, ymin, ymax = _to_int32(xmin * im_width), _to_int32(xmax * im_width), _to_int32(
                 ymin * im_height), _to_int32(ymax * im_height)
             tmp = tf.image.crop_to_bounding_box(img, ymin, xmin, ymax - ymin, xmax - xmin)
 
-            example["class_name"] = class_name
+            # example["class_name"] = class_name
             example["arr"] = tmp.numpy()
             example["score"] = scores[i]
 
