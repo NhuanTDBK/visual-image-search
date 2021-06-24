@@ -1,0 +1,12 @@
+pandas
+sklearn
+tensorflow
+transformers
+pydot
+graphviz
+tensorflow-addons
+tensorflow-hub
+sentencepiece
+efficientnet
+flask
+annoy
